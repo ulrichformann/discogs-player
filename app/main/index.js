@@ -14,7 +14,7 @@ app.on('ready', async () => {
   const mainWindow = new BrowserWindow({
     resizable: false,
     width: 640,
-    height: 360
+    height: isDev ? 1180 : 360,
   })
 
   const devPath = 'http://localhost:8000/start'
@@ -27,23 +27,8 @@ app.on('ready', async () => {
 
   const url = isDev ? devPath : prodPath
   mainWindow.loadURL(url)
+  mainWindow.webContents.openDevTools()
 })
 
 // Quit the app once all windows are closed
 app.on('window-all-closed', app.quit)
-
-// API
-/* 
-ipcMain.on('search-msg', async (e, query) => {
-
-  const { results } = await DB.search(query, {type: 'master', per_page: 10 })
-
-  e.reply('search-reply', { results })
-})
-
-ipcMain.on('getMaster-msg', async (e, query) => {
-
-  const selectedItem = await DB.getMaster(query)
-
-  e.reply('getMaster-reply', { selectedItem })
-}) */
