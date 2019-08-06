@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "alias": "discogs",
+  "name": "discogs",
+  "env": {
+    "consumerKey": "@discogs_consumer_key",
+    "consumerSecret": "@discogs_consumer_secret"
+  },
+  "builds": [{ "src": "src/index.js", "use": "@now/node" }],
+  "routes": [{ "src": "/", "dest": "/src/index.js" }]
+}

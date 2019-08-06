@@ -1,0 +1,20 @@
+{
+  "name": "discogs",
+  "version": "0.0.1",
+  "engines": {
+    "node": "10.x"
+  },
+  "scripts": {
+    "start": "now dev",
+    "deploy": "now"
+  },
+  "dependencies": {
+    "@now/node": "^0.12.3",
+    "apollo-server-micro": "^2.8.1",
+    "disconnect": "^1.2.1",
+    "dotenv": "^8.0.0",
+    "graphql": "^14.4.2",
+    "micro-cors": "^0.1.1",
+    "typescript": "^3.5.3"
+  }
+}

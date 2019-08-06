@@ -1,0 +1,35 @@
+{
+  "name": "app",
+  "version": "0.0.1",
+  "main": "main/index.js",
+  "license": "MIT",
+  "bundle": {
+    "name": "ElectronNext"
+  },
+  "scripts": {
+    "convert": "node src/converter",
+    "start": "electron .",
+    "build": "next build renderer && next export renderer",
+    "dist": "npm run build && bundle",
+    "dev": "next renderer"
+  },
+  "devDependencies": {
+    "@types/react": "^16.8.24",
+    "@types/styled-components": "^4.1.18",
+    "babel-plugin-styled-components": "^1.10.6",
+    "bundle": "^2.1.0",
+    "disconnect": "^1.2.1",
+    "electron": "6.0.0",
+    "next": "^9.0.3",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "styled-components": "^4.3.2",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "app-root-path": "^2.2.1",
+    "dotenv": "^8.0.0",
+    "electron-is-dev": "^1.1.0",
+    "electron-next": "^3.1.5"
+  }
+}
