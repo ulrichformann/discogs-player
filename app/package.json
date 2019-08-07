@@ -10,7 +10,7 @@
     "convert": "node src/converter",
     "start": "electron .",
     "build": "next build renderer && next export renderer",
-    "dist": "npm run build && bundle",
+    "dist": "npm run build && neutron",
     "dev": "next renderer"
   },
   "devDependencies": {
@@ -20,6 +20,7 @@
     "bundle": "^2.1.0",
     "disconnect": "^1.2.1",
     "electron": "6.0.0",
+    "neutron": "^2.9.1",
     "next": "^9.0.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
