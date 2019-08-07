@@ -9,7 +9,7 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = true
 
 // Prepare the renderer once the app is ready
 app.on('ready', async () => {
-  await prepareNext('./app/renderer')
+  await prepareNext('./renderer')
 
   const mainWindow = new BrowserWindow({
     resizable: false,

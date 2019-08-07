@@ -15,7 +15,8 @@ export const Border = styled.svg`
   height: 100%;
   left: 0;
   top: 0;
-
+  pointer-events: none;
+  
   rect {
     fill: none;
     stroke: #8E8E93;
@@ -26,7 +27,6 @@ export const Border = styled.svg`
 `
 
 export const Icon = styled.svg`
-  position: absolute;
-  left: calc(50% - 12px);
-  top: calc(50% - 12px);
+  width: 24px;
+  height: 24px;
 `
