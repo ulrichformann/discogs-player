@@ -108,9 +108,9 @@ const typeDefs = gql`
 
   type Query {
     search(
+      query: String!
       page: Int
       per_page: Int
-      query: String
       type: String
       title: String
       credit: String
