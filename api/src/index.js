@@ -12,6 +12,13 @@ const client = new Client('DiscogsConverter/0.1', {
 const DB = client.database()
 
 const typeDefs = gql`
+  enum Type {
+    release
+    master
+    artist
+    label
+  }
+
   type Urls {
     last: String
     next: String
@@ -45,6 +52,7 @@ const typeDefs = gql`
     resource_url: String
     type: String
     id: Int
+    master: Master
   }
   
   type Search {
@@ -111,7 +119,7 @@ const typeDefs = gql`
       query: String!
       page: Int
       per_page: Int
-      type: String
+      type: Type
       title: String
       credit: String
       artist: String
@@ -128,7 +136,6 @@ const typeDefs = gql`
       submitter: String
       contributor: String
     ): Search
-    masters( master_id: Int ): Master
   }
 `
 
@@ -136,16 +143,19 @@ const resolvers = {
   Query: {
     search: async (obj, args, context, info) => {
       const res = await DB.search(args.query, { ...args })
+
+      const reqs = res.results.map(e => DB.getMaster(e.id))
+
+      await Promise.all(reqs)
+
+      res.results.forEach((e, i) => {
+        e.master = reqs[i]
+      })
     
       return { 
         results: res.results,
         pagination: res.pagination
       }
-    },
-    masters: async (obj, args, context, info) => {
-      const res = await DB.getMaster(args.master_id)
-
-      return res
     }
   }
 }
