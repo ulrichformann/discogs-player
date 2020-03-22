@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "alias": "discogs",
-  "name": "discogs",
   "env": {
     "consumerKey": "@discogs_consumer_key",
     "consumerSecret": "@discogs_consumer_secret"

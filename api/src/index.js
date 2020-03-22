@@ -32,9 +32,14 @@ const typeDefs = gql`
     items: Int
   }
 
-  type Community {
-    want: Int
+  type Community { 
+    data_quality: String
     have: Int
+    status: String
+    want: Int
+    submitter: Submitter
+    rating: Rating
+    contributors: [ Contributors ]
   }
 
   type Result {
@@ -114,6 +119,95 @@ const typeDefs = gql`
     styles: [ String ] 
   }
 
+  type Labels {
+    catno: String
+    entity_type: String
+    id: Int
+    name: String
+    resource_url: String 
+  }
+
+  type Identifiers { 
+    type: String 
+    value: String 
+  }
+
+  type Formats { 
+    name: String 
+    qty: String 
+    descriptions: [String ] 
+  }
+
+  type Extraartists {
+    anv: String
+    id: Int
+    join: String
+    name: String
+    resource_url: String
+    role: String
+    tracks: String
+  }
+
+  type Companies { 
+    catno: String
+    entity_type: String
+    entity_type_name: String
+    id: Int
+    name: String
+    resource_url: String
+  }
+
+  type Submitter { 
+    resource_url: String 
+    username: String
+  }
+
+  type Rating { 
+    average: Float 
+    count: Int 
+  }
+
+  type Contributors { 
+    resource_url: String 
+    username: String 
+  }
+
+  type Release { 
+    title: String
+    id: Int
+    data_quality: String
+    thumb: String
+    country: String
+    date_added: String
+    date_changed: String
+    estimated_weight: Int
+    format_quantity: Int
+    lowest_price: Float
+    master_id: Int
+    master_url: String
+    notes: String
+    num_for_sale: Int
+    released: String
+    released_formatted: String
+    resource_url: String
+    status: String
+    uri: String
+    year: Int
+    videos: [ Videos ]
+    tracklist: [ Tracklist ]
+    styles: [ String ]
+    series: [ String ]
+    labels: [ Labels ]
+    images: [ Images ]
+    identifiers: [ Identifiers ]
+    genres: [ String ]
+    formats: [ Formats ]
+    extraartists: [ Extraartists ]
+    companies: [ Companies ]
+    community: Community
+    artists: [ Artists ]
+  }
+
   type Query {
     search(
       query: String!
@@ -136,6 +230,11 @@ const typeDefs = gql`
       submitter: String
       contributor: String
     ): Search
+    
+    release(
+      release_id: Int!
+      curr_abbr: String
+    ): Release
   }
 `
 
@@ -151,11 +250,16 @@ const resolvers = {
       res.results.forEach((e, i) => {
         e.master = reqs[i]
       })
-    
-      return { 
+
+      return {
         results: res.results,
         pagination: res.pagination
       }
+    },
+    release: async (obj, args, context, info) => {
+      const res = await DB.getRelease(args.release_id)
+
+      return res
     }
   }
 }
@@ -177,7 +281,7 @@ export const config = {
 
 // Fix CORS Preflight request 
 // https://github.com/apollographql/apollo-server/issues/2473
-const optionsHandler = (req , res) => {
+const optionsHandler = (req, res) => {
   if (req.method === 'OPTIONS') {
     res.end()
     return
