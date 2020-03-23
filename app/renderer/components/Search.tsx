@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import styled from 'styled-components'
+import LoadingBar from 'react-top-loading-bar'
 
 import Section, { SearchIcon } from './Section'
 
@@ -43,11 +44,16 @@ const Input = styled.input`
   font-family: inherit;
   font-size: inherit;
   transition: all ${timing}ms ease;
+
+  ::placeholder {
+    color: #636366;
+  }
 `
 
-export default forwardRef((props, ref) => {
+const Search = forwardRef((props, ref) => {
   const input = useRef(null)
-  const [ active, setActive ] = useState(false)
+  const loadingBar = useRef(null)
+  const [active, setActive] = useState(false)
 
   useImperativeHandle(ref, () => ({
     focus() {
@@ -56,6 +62,7 @@ export default forwardRef((props, ref) => {
   }))
 
   const handleFocus = () => {
+
     setTimeout(() => {
       input.current.focus()
     }, timing)
@@ -68,23 +75,73 @@ export default forwardRef((props, ref) => {
       setActive(false)
   }
 
-  const search = (e) => {
-    if (e.keyCode === 13) {
+  const search = async (e) => {
+    const { value } = input.current
+
+    if (e.keyCode !== 13 || !value)
+      return
+
+    let url
+
+    try {
+      url = new URL(value)
+    } catch (err) {
+      input.current.value = ''
+      return
+    }
+
+    const paths = url.pathname.split('/')
+    const type = paths[ paths.length - 2 ]
+    const id = paths[ paths.length - 1 ]
+    
+    if (type !== 'release') {
+      input.current.value = ''
+      return
+    }
+
+    try {
+      loadingBar.current.continuousStart()
+      console.log(type, id)
       
+      await fetch('https://discogs.now.sh', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({query: `{
+          release(release_id: ${id}) {
+            title
+          }
+        }`})
+      })
+      .then(r => r.json())
+      .then(data => {
+        console.log('data returned:', data)
+      })
+    } catch (err) {
+      console.log(err)
+    } finally {
+      loadingBar.current.complete()
     }
   }
 
   return (
-    <Wrapper
-      active={active}
-    >
-      <ClickArea 
-        onClick={handleFocus}
+    <>
+      <LoadingBar ref={loadingBar} />
+      <Wrapper
         active={active}
       >
-        <Input ref={input} onBlur={handleBlur} active={active} onKeyDown={search} />
-        <SearchIcon />
-      </ClickArea>
-    </Wrapper>
+        <ClickArea
+          onClick={handleFocus}
+          active={active}
+        >
+          <Input ref={input} onBlur={handleBlur} active={active} onKeyDown={search} placeholder='Discogs link' defaultValue='https://www.discogs.com/The-Raconteurs-Broken-Boy-Soldiers/release/699154' />
+          <SearchIcon />
+        </ClickArea>
+      </Wrapper>
+    </>
   )
 })
+
+export default Search

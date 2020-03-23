@@ -2,12 +2,20 @@ import { forwardRef } from 'react'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
-  height: 100%;
+  height: calc(100% - 32px);
   width: calc(50% - 16px);
-  margin: 0 8px;
+  margin: 16px 8px;
   box-sizing: border-box;
   border-radius: 4px;
   position: relative;
+
+  :first-child {
+    margin-left: 16px;
+  }
+
+  :last-child {
+    margin-right: 16px;
+  }
 `
 
 const Border = styled.svg`

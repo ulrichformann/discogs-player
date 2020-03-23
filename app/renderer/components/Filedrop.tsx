@@ -16,6 +16,7 @@ declare global {
 
 const DropArea = styled.div`
   height: 100%;
+  margin: 16px 8px;
   outline: 0;
   cursor: pointer;
   background: ${(p: { active: boolean }) => p.active ? '#3A3A3C' : 'none'};
