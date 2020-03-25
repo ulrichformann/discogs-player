@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import styled from 'styled-components'
-import LoadingBar from 'react-top-loading-bar'
 
 import Section, { SearchIcon } from './Section'
 
@@ -50,9 +49,8 @@ const Input = styled.input`
   }
 `
 
-const Search = forwardRef((props, ref) => {
+const Search = forwardRef((props: { query: any }, ref) => {
   const input = useRef(null)
-  const loadingBar = useRef(null)
   const [active, setActive] = useState(false)
 
   useImperativeHandle(ref, () => ({
@@ -99,36 +97,11 @@ const Search = forwardRef((props, ref) => {
       return
     }
 
-    try {
-      loadingBar.current.continuousStart()
-      console.log(type, id)
-      
-      await fetch('https://discogs.now.sh', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({query: `{
-          release(release_id: ${id}) {
-            title
-          }
-        }`})
-      })
-      .then(r => r.json())
-      .then(data => {
-        console.log('data returned:', data)
-      })
-    } catch (err) {
-      console.log(err)
-    } finally {
-      loadingBar.current.complete()
-    }
+    props.query(id)
   }
 
   return (
     <>
-      <LoadingBar ref={loadingBar} />
       <Wrapper
         active={active}
       >

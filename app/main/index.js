@@ -47,5 +47,5 @@ ipcMain.on('files', async (event, message) => {
   const acceptedFileTypes = ['audio/mpeg', 'audio/x-flac', 'audio/vnd.wave', 'audio/aiff', 'audio/ogg']
   const acceptedFiles = files.filter(e => acceptedFileTypes.indexOf(e.mime) !== -1)
 
-  console.log(acceptedFiles)
+  event.reply('files', acceptedFiles)
 })

@@ -1,22 +1,12 @@
 import { useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { useDropzone } from 'react-dropzone'
 import path from 'path'
+import { useDropzone } from 'react-dropzone'
 
 import Section, { FileIcon } from './Section'
-import { IpcRenderer } from 'electron'
-
-declare global {
-  namespace NodeJS {
-    interface Global {
-      ipcRenderer: IpcRenderer
-    }
-  }
-}
 
 const DropArea = styled.div`
   height: 100%;
-  margin: 16px 8px;
   outline: 0;
   cursor: pointer;
   background: ${(p: { active: boolean }) => p.active ? '#3A3A3C' : 'none'};
@@ -44,11 +34,7 @@ const FolderName = styled.div`
 `
 
 export default (props) => {
-  const [ folder, setFolder ] = useState(null)
   const [ drag, setDrag ] = useState(false)
-
-  useEffect(() => {
-  })
 
   const onDrop = useCallback(acceptedFiles => {
     setDrag(false)
@@ -56,9 +42,7 @@ export default (props) => {
     global.ipcRenderer.send('files', acceptedFiles.map(e => e.path))
 
     const directories = acceptedFiles.map(e => e.path)
-    setFolder(getFolder(directories))
-
-    props.search.current.focus()
+    props.setFolder(getFolder(directories))
   }, [])
 
   const getFolder = (directories) => {
@@ -86,12 +70,12 @@ export default (props) => {
         { ...getRootProps() } 
         onDragEnter={() => setDrag(true)}
         onDragLeave={() => setDrag(false)}
-        active={drag || folder !== null}
+        active={drag || props.folder !== null}
       >
         <input type="file" accept="audio/*" {...getInputProps()} />
         <CenterLine>
           <FileIcon />
-          {folder !== null && <FolderName>{folder}</FolderName>}
+          {props.folder && <FolderName>{props.folder}</FolderName>}
         </CenterLine>
       </DropArea>
     </Section>
