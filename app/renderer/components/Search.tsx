@@ -109,7 +109,7 @@ const Search = forwardRef((props: { query: any }, ref) => {
           onClick={handleFocus}
           active={active}
         >
-          <Input ref={input} onBlur={handleBlur} active={active} onKeyDown={search} placeholder='Discogs link' defaultValue='https://www.discogs.com/The-Raconteurs-Broken-Boy-Soldiers/release/699154' />
+          <Input ref={input} onBlur={handleBlur} active={active} onKeyDown={search} placeholder='Discogs link' defaultValue='https://www.discogs.com/DJ-Freak-Rot-In-Hell-EP/release/1610060' />
           <SearchIcon />
         </ClickArea>
       </Wrapper>
