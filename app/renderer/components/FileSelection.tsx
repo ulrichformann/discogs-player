@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { useState, useRef, useEffect } from 'react'
 
 import { FileIcon } from './Section'
@@ -127,10 +127,35 @@ const CancelButton = styled.button`
   }
 `
 
+const ConvertButton = styled.button<{ show?: boolean }>`
+  background: #F2F2F7;
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  border: 0;
+  box-shadow: 0 8px 8px 0px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: all 333ms ease;
+  transform-origin: center;
+
+  :hover {
+    box-shadow: 0 8px 8px 0px rgba(0, 0, 0, 0.5);
+  }
+
+  animation: ${() => keyframes`
+    from { opacity: 0.1 }
+  `} 333ms ease forwards;
+`
+
 interface Props {
   searched: boolean, 
   onCancel: any,
   folder: string,
+  convert: any,
   files: {
     path: string,
     name: string,
@@ -182,8 +207,21 @@ export default (props: Props) => {
     setFiles(newFiles)
   }
 
+  const convert = () => {
+    const newFiles = [ ...files ].map(e => {
+      delete e.fileIndex
+
+      e.file = e.file.path
+
+      return e
+    })
+
+    props.convert(newFiles)
+  }
+
   return (
     <>
+      {(files.findIndex(e => e.file == null) === -1) && <ConvertButton onClick={convert}>convert</ConvertButton>}
       <Wrapper>
         <Title>
           <FileIcon />
