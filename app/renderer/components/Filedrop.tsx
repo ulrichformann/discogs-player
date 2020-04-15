@@ -62,7 +62,7 @@ export default (props) => {
     }
   }
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+  const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
   return (
     <Section>
@@ -72,7 +72,7 @@ export default (props) => {
         onDragLeave={() => setDrag(false)}
         active={drag || props.folder !== null}
       >
-        <input type="file" accept="audio/*" {...getInputProps()} />
+        <input webkitdirectory='' multiple {...getInputProps()} />
         <CenterLine>
           <FileIcon />
           {props.folder && <FolderName>{props.folder}</FolderName>}

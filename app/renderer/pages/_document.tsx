@@ -11,6 +11,13 @@ declare global {
   }
 }
 
+declare module 'react' {
+  interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
+    // extends React's HTMLAttributes
+    webkitdirectory?: string;
+  }
+}
+
 export default class MyDocument extends Document {
   static async getInitialProps (ctx) {
     const sheet = new ServerStyleSheet()

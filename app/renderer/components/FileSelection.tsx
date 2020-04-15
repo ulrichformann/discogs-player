@@ -2,6 +2,7 @@ import styled, { keyframes } from 'styled-components'
 import { useState, useRef, useEffect } from 'react'
 
 import { FileIcon } from './Section'
+import Cancel from './CancelButton'
 
 const DropWrapper = styled.div`
   width: 50%;
@@ -42,6 +43,12 @@ const Files = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
+`
+
+const CancelButton = styled(Cancel)`
+  position: absolute;
+  top: 12px;
+  right: 16px;
 `
 
 const File = styled.div<{ dragOver?: boolean }>`
@@ -98,35 +105,6 @@ const CoverWrapper = styled.div`
   background: white;
 `
 
-const CancelButton = styled.button`
-  position: absolute;
-  background: 0;
-  top: 12px;
-  right: 16px;
-  width: 24px;
-  height: 24px;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-
-  :before, :after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 18px;
-    height: 0px;
-    transform: translate(-50%, -50%) rotate(45deg);
-    border: 0.5px solid black;
-    border-radius: 0.5px;
-    transition: all 333ms ease;
-  }
-
-  :after {
-    transform: translate(-50%, -50%) rotate(-45deg);
-  }
-`
-
 const ConvertButton = styled.button<{ show?: boolean }>`
   background: #F2F2F7;
   position: absolute;
@@ -171,12 +149,12 @@ export default (props: Props) => {
   const [ files, setFiles ] = useState([])
 
   useEffect(() => {
-    setFiles(props.data.tracklist.map(e => ({ 
+    console.log(props.files)
+    setFiles(props.data.tracklist.map((e, i) => ({ 
       ...e,
-      file: null,
-      fileIndex: null,
+      file: props.files[i], // null,
+      fileIndex: i, // null,
     })))
-
   }, [ props.data ])
 
   const handleDrop = () => {
@@ -209,9 +187,13 @@ export default (props: Props) => {
 
   const convert = () => {
     const newFiles = [ ...files ].map(e => {
-      delete e.fileIndex
+      e = {
+        ...e,
+        ...e.file
+      }
 
-      e.file = e.file.path
+      delete e.file
+      delete e.fileIndex
 
       return e
     })
